@@ -9,7 +9,8 @@ export function sortStrings(arr, param = 'asc') {
     return a.localeCompare(b, ['ru', 'en'], {caseFirst: 'upper'});
   };
     
-  const result = arr.slice().sort((a, b) => sort(a, b));
+  const result = [...arr];
+  result.sort((a, b) => sort(a, b));
 
   return param == 'asc' ? result : result.reverse();
 }
