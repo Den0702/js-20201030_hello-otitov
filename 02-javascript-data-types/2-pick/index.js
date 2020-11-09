@@ -8,9 +8,7 @@ export const pick = (obj, ...fields) => {
   const newObject = {};
 
   Object.entries(obj).forEach(([key, value]) => {
-    const idx = fields.indexOf(key);
-    
-    if (idx > -1) {
+    if (fields.includes(key)) {
       newObject[key] = value;
     }
   });
