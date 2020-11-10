@@ -7,7 +7,7 @@ export function sum(n) {
   let totalSum = n || 0;
 
   const func = (n = 0) => {
-    totalSum += n;
+    totalSum += n || 0;
     return func;
   }
 
