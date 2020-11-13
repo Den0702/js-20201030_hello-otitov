@@ -6,7 +6,7 @@
 export function createGetter(path) {
   const pathArray = path.split('.');
 
-  const getter = (obj) =>{
+  const getter = (obj) => {
     const currentProp = pathArray.shift();
     
     if (typeof obj[currentProp] === "object") {
