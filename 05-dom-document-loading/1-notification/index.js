@@ -12,12 +12,12 @@ export default class NotificationMessage {
     text = '',
     {
       duration = 2000,
-      type = 'success'
+      type = NotificationMessage.DEFAULT_TYPE
     } = {}
   ) {
     this._text = text;
     this._duration = duration;
-    this._type = type;
+    this.type = type;
 
     this.render();
   }
@@ -31,8 +31,16 @@ export default class NotificationMessage {
   }
 
   get type() {
-    return (NotificationMessage.POSSIBLE_TYPES.includes(this._type)) ?
-      this._type : NotificationMessage.DEFAULT_TYPE;
+    return this._type;
+  }
+
+  set type(value) {
+    if ( NotificationMessage.POSSIBLE_TYPES.includes(value) ) {
+      this._type = value;
+    }
+    else {
+      this._type = NotificationMessage.DEFAULT_TYPE;
+    }
   }
 
   get template() {

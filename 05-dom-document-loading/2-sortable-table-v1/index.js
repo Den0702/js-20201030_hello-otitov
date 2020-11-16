@@ -47,11 +47,11 @@ export default class SortableTable {
 
   get data() {
     return this._data.map( item => {
-      const rows = this.getRowTemplate(item);
+      const cell = this.getCellTemplate(item);
 
       return `
         <a href="/products/${item.id}" class="sortable-table__row">
-          ${rows}
+          ${cell}
         </a>
       `;
     }).join('');
@@ -74,7 +74,7 @@ export default class SortableTable {
     }
   }
 
-  getRowTemplate(data) {
+  getCellTemplate(data) {
     return this._header.map( item => {
       if (item.template) {
         return item.template(data[item.id]);
