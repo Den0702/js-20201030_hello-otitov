@@ -1,5 +1,6 @@
 export default class ColumnChart {
   chartHeight = 50;
+  refElements = {};
 
   constructor({ label = '', link = false, value = 0, data = [] } = {}) {
     this._label = label;
@@ -21,13 +22,14 @@ export default class ColumnChart {
 
     return this._data.reduce((acc, current) => {
       const percent = (current / max * 100).toFixed(0);
-      return acc += `<div style="--value: ${Math.floor(current * scale)}" data-tooltip="${percent}%"></div>`;
-    }, '');
+      acc.push(`<div style="--value: ${Math.floor(current * scale)}" data-tooltip="${percent}%"></div>`);
+      return acc;
+    }, []).join('');
   }
 
   get template() {
     return `
-      <div class="column-chart">
+      <div class="column-chart column-chart_loading">
         <div class="column-chart__title">
           ${this._label}
           ${this.link}
@@ -48,15 +50,27 @@ export default class ColumnChart {
     element.innerHTML = this.template;
     this.element = element.firstElementChild;
 
-    // если данных нет, показываем заглушку
-    if (this._data.length <= 0) {
-      this.element.classList.add('column-chart_loading');
-    }
+    this.changeLoading();
+
+    // кешируем блоки, где подразумевается "рендер" новых данных
+    this.element.querySelectorAll('[data-element]').forEach( element => {
+      this.refElements[element.dataset.element] = element;
+    });
   }
 
   update( data = [] ) {
-    this._data = data;
-    this.render();
+    if (data.length) {
+      this._data = data;
+      this.refElements['body'].innerHTML = this.charts;
+    }
+    
+    this.changeLoading();
+  }
+  
+  changeLoading() {
+    return this._data.length ? 
+      this.element.classList.remove('column-chart_loading') : 
+      this.element.classList.add('column-chart_loading');
   }
 
   initEventListeners() {
@@ -65,10 +79,13 @@ export default class ColumnChart {
 
   remove() {
     this.element.remove();
+    this.refElements = {};
   }
 
   destroy() {
     this.remove();
+    this._data = [];
+    this.element = null;
     // NOTE: удаляем обработчики событий, если они есть
   }
 }
