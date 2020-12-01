@@ -38,7 +38,7 @@ export default class SortableTable {
   get header() {
     return this._header.map( item => {
       return `
-        <div class="sortable-table__cell" data-id="${item.id}" data-sortable="${item.id}">
+        <div class="sortable-table__cell" data-id="${item.id}" data-sortable="${item.sortable}">
           <span>${item.title}</span>
         </div>
       `;
@@ -135,6 +135,4 @@ export default class SortableTable {
     this.refElements = {};
     this.refSortables = {};
   }
-  
 }
-
