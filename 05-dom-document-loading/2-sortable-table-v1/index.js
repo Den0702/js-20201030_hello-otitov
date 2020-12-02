@@ -108,7 +108,7 @@ export default class SortableTable {
 
     const sortType = this.refSortables[fieldValue];
 
-    this._data.sort( (a, b) => {
+    this._data.sort((a, b) => {
       switch (sortType) {
         case "number":
           return this.direction * (a[fieldValue] - b[fieldValue]);

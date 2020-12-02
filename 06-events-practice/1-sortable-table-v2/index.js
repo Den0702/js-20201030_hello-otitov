@@ -1,13 +1,13 @@
 import Sortable from '../../05-dom-document-loading/2-sortable-table-v1/index.js';
 
-export default class SortableTable extends Sortable{
+export default class SortableTable extends Sortable {
   constructor(
     header = [],
     {
       data = [],
       defaultSorted = header.find(item => item.sortable).id
     } = {}
-  ){
+  ) {
     super(header, {data});
 
     this.defaultSorted = defaultSorted;
@@ -46,7 +46,7 @@ export default class SortableTable extends Sortable{
 
         this.sort(collumn.dataset.id, collumn.dataset.order);
 
-        collumn.append( this.sortingArrow );
+        collumn.append(this.sortingArrow);
       }
     });
   }
