@@ -1,33 +1,37 @@
 export default class NotificationMessage {
   static activeElement;
-  static timerId;
-
-  static POSSIBLE_TYPES = [
-    'success',
-    'error'
-  ];
-  static DEFAULT_TYPE = 'success';
+  static timerID;
 
   constructor(
     text = '',
     {
       duration = 2000,
-      type = NotificationMessage.DEFAULT_TYPE
+      type = ''
     } = {}
   ) {
-    this._text = text;
-    this._duration = duration;
+    /**
+     * clearTimeout все-таки нужен. Как повторить баг:
+     * тыкать 10 раз подряд "кнопку", остановится и увидеть, 
+     * что мессендж исчез раньше заданного времени (2сек)
+     */
+    if (NotificationMessage.activeElement) {
+      NotificationMessage.activeElement.remove();
+      clearTimeout(NotificationMessage.timerID);
+    }
+
+    this.text = text;
+    this.duration = duration;
     this.type = type;
 
     this.render();
   }
 
-  get text() {
-    return this._text;
-  }
-
   get duration() {
     return this._duration;
+  }
+
+  set duration(value) {
+    this._duration = (value > 0) ? value : 2000;
   }
 
   get type() {
@@ -35,12 +39,7 @@ export default class NotificationMessage {
   }
 
   set type(value) {
-    if ( NotificationMessage.POSSIBLE_TYPES.includes(value) ) {
-      this._type = value;
-    }
-    else {
-      this._type = NotificationMessage.DEFAULT_TYPE;
-    }
+    this._type = ['success', 'error'].includes(value) ? value : 'success';
   }
 
   get template() {
@@ -64,29 +63,21 @@ export default class NotificationMessage {
   }
 
   show(nodeEl = document.body) {
-    if (NotificationMessage.activeElement) {
-      this.remove();
-    }
-    
     nodeEl.append( this.element );
     NotificationMessage.activeElement = this.element;
 
-    NotificationMessage.timerId = setTimeout( () => {
+    NotificationMessage.timerID = setTimeout( () => {
       this.remove();
     }, this.duration);
   }
 
   remove() {
-    if (NotificationMessage.activeElement) {
-      NotificationMessage.activeElement.remove();
-      clearTimeout(NotificationMessage.timerId);
-    }
+    this.element.remove();
   }
 
   destroy() {
     this.remove();
-    this.element = null;
     NotificationMessage.activeElement = null;
-    NotificationMessage.timerId = null;
+    NotificationMessage.timerID = null;
   }
 }
